@@ -1,0 +1,27 @@
+Bootstrap: library
+From: alpine:latest
+
+%labels
+    author Moises Baltazar
+
+%pre
+# Before install (host)
+
+%post
+# After install (guest)
+apk add --no-cache --virtual bash squashfs-tools libseccomp-dev cryptsetup
+#apk add --no-cache --virtual .build-deps bash gcc g++ musl-dev openssl go squashfs-tools git linux-headers libseccomp-dev cryptsetup make
+
+
+%runscript
+# Script to run when executing environment
+singularity
+
+%files
+# Files to copy from the host system.
+./output/bin/singularity /usr/local/bin/singularity
+./output/bin/run-singularity /usr/local/bin/run-singularity
+./output/etc/singularity /usr/local/etc/singularity
+./output/libexec/singularity /usr/local/libexec/singularity
+./output/var/singularity /usr/local/var/singularity
+

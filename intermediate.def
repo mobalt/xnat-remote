@@ -1,0 +1,13 @@
+Bootstrap: library
+From: alpine:latest
+
+%labels
+    author Moises Baltazar
+
+%pre
+# Before install (host)
+
+%post
+# After install (guest)
+apk update
+apk add --no-cache --virtual .build-deps bash gcc g++ musl-dev build-base openssl go squashfs-tools git linux-headers libseccomp-dev cryptsetup make
