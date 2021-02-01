@@ -24,4 +24,3 @@ singularity
 ./output/etc/singularity /usr/local/etc/singularity
 ./output/libexec/singularity /usr/local/libexec/singularity
 ./output/var/singularity /usr/local/var/singularity
-
