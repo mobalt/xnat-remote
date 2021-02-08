@@ -1,5 +1,5 @@
-Bootstrap: library
-From: alpine:latest
+Bootstrap: docker
+From: python:3.9-alpine
 
 %labels
     author Moises Baltazar

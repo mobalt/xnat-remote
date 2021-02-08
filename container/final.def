@@ -1,16 +1,12 @@
-Bootstrap: library
-From: alpine:latest
+Bootstrap: docker
+From: python:3.9-alpine
 
 %labels
     author Moises Baltazar
 
-%pre
-# Before install (host)
-
 %post
-# After install (guest)
 apk add --no-cache --virtual bash squashfs-tools libseccomp-dev cryptsetup
-#apk add --no-cache --virtual .build-deps bash gcc g++ musl-dev openssl go squashfs-tools git linux-headers libseccomp-dev cryptsetup make
+pip install jinja2
 
 
 %runscript
