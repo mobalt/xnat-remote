@@ -1,0 +1,3 @@
+if [ ! -f {{ sif_image }} ]; then
+    singularity build {{sif_image}} {{docker_image}}
+fi
