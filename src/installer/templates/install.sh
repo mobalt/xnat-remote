@@ -21,10 +21,10 @@ dir_exists ~/containers
 dir_exists ~/bin
 cat << 'REMOTE_CODE' > ~/bin/xnat-remote
 #!/bin/bash
-module load singularity-3.5.2
+#module load singularity-3.5.2
 
 singularity exec \
-        ~/containers/xnat_remote.sif \
+        ~/containers/xnat-remote.sif \
         python ~/remote.py $@
 
 # if generate output.sh, run it
@@ -33,7 +33,7 @@ if [ -f ~/output.sh ]; then
 fi
 REMOTE_CODE
 # make executable
-chmod 500 ~/bin/xnat-remote
+chmod 700 ~/bin/xnat-remote
 
 
 # Step 3.
@@ -45,6 +45,6 @@ if [ ! -f ~/.ssh/authorized_keys ]; then
     chmod 644 ~/.ssh/authorized_keys
 fi
 
-echo 'command="~/bin/xnat-remote $SSH_ORIGINAL_COMMAND",no-port-forwarding,no-x11-forwarding,no-agent-forwarding {{ KEY }}' \\
+echo 'command="~/bin/xnat-remote $SSH_ORIGINAL_COMMAND",no-port-forwarding,no-x11-forwarding,no-agent-forwarding {{ KEY }} Automatically added for xnat-remote.' \
     >> ~/.ssh/authorized_keys
 
