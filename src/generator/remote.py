@@ -75,6 +75,7 @@ conversion_template = """
 # ================================================================
 # module load singularity
 if [ ! -f {{ sif_image }} ]; then
+singularity exec ~/containers/xnat-remote.sif \ 
     singularity build {{sif_image}} {{docker_image}}
 fi
 """
