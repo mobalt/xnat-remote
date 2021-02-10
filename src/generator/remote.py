@@ -9,7 +9,7 @@ from urllib.parse import quote, unquote
 def process_image(docker_image):
     namespace, image, version = re.search("(.+)/(.+):(.+)", docker_image).groups()
     docker_image = f"docker://{namespace}/{image}"
-    sif_image = f"~/{namespace}_{image}_{version}.sif"
+    sif_image = f"~/containers/{namespace}_{image}_{version}.sif"
     return docker_image, sif_image
 
 
@@ -70,8 +70,10 @@ def parse_arguments(args=None):
 
 
 conversion_template = """
-module load singularity
-
+# ================================================================
+# = Convert/Build singularity image if it doesn't already exist. =
+# ================================================================
+# module load singularity
 if [ ! -f {{ sif_image }} ]; then
     singularity build {{sif_image}} {{docker_image}}
 fi
@@ -79,6 +81,7 @@ fi
 
 
 singularity_template = """
+# module load singularity
 singularity exec \\
 {%- for item in binds %}
     --bind {{ item }} \\
@@ -116,15 +119,26 @@ torque_header = """#PBS -S /bin/bash
 #PBS -e {{ stderr }}
 """
 
-torque = f"""{torque_header}
+torque = f"""#!/bin/bash
 {conversion_template}
+filename="{{ name }}-aux-$(date +"%Y-%m-%d.%H%M").sh"
+cat << 'AUX_SCRIPT_CODE' > $filename
+{torque_header}
 {singularity_template}
-"""
-slurm = f"""{slurm_header}
-{conversion_template}
-{singularity_template}
-"""
+AUX_SCRIPT_CODE
 
+qsub $filename
+"""
+slurm = f"""#!/bin/bash
+{conversion_template}
+filename="{{ name }}-aux-$(date +"%Y-%m-%d.%H%M").sh"
+cat << 'AUX_SCRIPT_CODE' > $filename
+{slurm_header}
+{singularity_template}
+AUX_SCRIPT_CODE
+
+sbatch $filename
+"""
 
 def main():
     params = parse_arguments()
