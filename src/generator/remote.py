@@ -118,10 +118,11 @@ torque_header = """#PBS -S /bin/bash
 #PBS -o {{ stdout }}
 #PBS -e {{ stderr }}
 """
+filename = "aux-{{ name }}.sh"
 
 torque = f"""#!/bin/bash
 {conversion_template}
-filename="{{ name }}-aux-$(date +"%Y-%m-%d.%H%M").sh"
+filename="{filename}"
 cat << 'AUX_SCRIPT_CODE' > $filename
 {torque_header}
 {singularity_template}
@@ -131,7 +132,7 @@ qsub $filename
 """
 slurm = f"""#!/bin/bash
 {conversion_template}
-filename="{{ name }}-aux-$(date +"%Y-%m-%d.%H%M").sh"
+filename="{filename}"
 cat << 'AUX_SCRIPT_CODE' > $filename
 {slurm_header}
 {singularity_template}
