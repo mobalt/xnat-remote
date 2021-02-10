@@ -4,7 +4,7 @@ import os
 import argparse
 import re
 from jinja2 import Environment, BaseLoader
-
+from urllib.parse import quote, unquote
 
 def process_image(docker_image):
     namespace, image, version = re.search("(.+)/(.+):(.+)", docker_image).groups()
@@ -29,10 +29,12 @@ def parse_arguments(args=None):
     parser.add_argument(
         "--additional-params",
         type=str,
+        dest="additional_params",
         help="Misc additional params to append to queue request.",
     )
     parser.add_argument(
         "--docker-image",
+        dest="docker_image",
         type=str,
         help="The Image from DockerHub to use.",
     )
@@ -49,12 +51,12 @@ def parse_arguments(args=None):
         help="The volumes to bind",
     )
     parsed_args = parser.parse_args(args)
-    image = parsed_args["docker-image"]
+    image = parsed_args.docker_image
     docker_image, sif_image = process_image(image)
     return dict(
         docker_image=docker_image,
         sif_image=sif_image,
-        cmd=parsed_args.cmd,
+        cmd=unquote(parsed_args.cmd),
         binds=parsed_args.bind,
         gpu=parsed_args.gpu,
         nodes=parsed_args.nodes,
@@ -63,7 +65,7 @@ def parse_arguments(args=None):
         mem=parsed_args.mem,
         stdout=parsed_args.stdout,
         stderr=parsed_args.stderr,
-        additional_params=parsed_args["additional-params"],
+        additional_params=parsed_args.additional_params,
     )
 
 
