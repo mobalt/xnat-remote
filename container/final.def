@@ -5,7 +5,7 @@ From: python:3.9-alpine
     author Moises Baltazar
 
 %post
-apk add --no-cache --virtual bash squashfs-tools libseccomp-dev cryptsetup
+apk add --no-cache bash squashfs-tools libseccomp-dev cryptsetup
 pip install jinja2
 
 
